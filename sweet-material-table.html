@@ -39,26 +39,17 @@
 
         <template is="dom-repeat" items="[[bulkActions]]" as="action">
 
-          <iron-icon class="alternate-action"
-                     icon="[[action.icon]]"
-                     title="[[action.title]]"
-                     action="[[action.name]]"
-                     on-click="_actionClicked"></iron-icon>
+          <iron-icon class="alternate-action" icon="[[action.icon]]" title="[[action.title]]" action="[[action.name]]" on-click="_actionClicked"></iron-icon>
 
         </template>
 
-        <paper-menu-button
-            id="filterListMenu"
-            visible$="[[availableColumns.length]]"
-            horizontal-align="right"
-            open-animation-config="[[_paperMenuButtonOpenAnimationConfig]]">
+        <paper-menu-button id="filterListMenu" visible$="[[availableColumns.length]]" horizontal-align="right" open-animation-config="[[_paperMenuButtonOpenAnimationConfig]]">
           <paper-icon-button icon="icons:filter-list" class="dropdown-trigger"></paper-icon-button>
+
           <paper-menu class="dropdown-content">
             <template is="dom-repeat" items="[[availableColumns]]" as="column">
 
-              <paper-checkbox checked$="{{_isColumnVisible(column)}}"
-                              column="[[column]]"
-                              on-click="_selectColumn">
+              <paper-checkbox checked$="{{_isColumnVisible(column)}}" column="[[column]]" on-click="_selectColumn">
                 <span>[[column.title]]</span>
               </paper-checkbox>
 
@@ -66,17 +57,12 @@
           </paper-menu>
         </paper-menu-button>
 
-        <paper-menu-button
-            id="globalActionsMenu"
-            visible$="[[globalActions.length]]"
-            horizontal-align="right"
-            open-animation-config="[[_paperMenuButtonOpenAnimationConfig]]">
+        <paper-menu-button id="globalActionsMenu" visible$="[[globalActions.length]]" horizontal-align="right" open-animation-config="[[_paperMenuButtonOpenAnimationConfig]]">
           <paper-icon-button icon="icons:more-vert" class="dropdown-trigger"></paper-icon-button>
           <paper-menu class="dropdown-content">
             <template is="dom-repeat" items="[[globalActions]]" as="action">
 
-              <paper-item action="[[action.name]]"
-                          on-click="_actionClicked">
+              <paper-item action="[[action.name]]" on-click="_actionClicked">
                 <span>[[action.title]]</span>
               </paper-item>
 
@@ -95,17 +81,17 @@
       <template is="dom-if" if="[[!customTheadContent]]">
         <div class="thead">
           <div class="tr horizontal layout">
-            <div class="th checkbox">
-              <paper-checkbox id="selectAll" on-click="_selectAll"></paper-checkbox>
-            </div>
+            <template is="dom-if" if="[[selectRowEnable]]">
+              <div class="th checkbox">
+                <paper-checkbox id="selectAll" on-click="_selectAll"></paper-checkbox>
+              </div>
+            </template>
             <template is="dom-repeat" items="{{columns}}" as="column">
               <div class="flex th" data-column$="[[column.key]]" on-click="_sortColumn">
 
-                <iron-icon class="sorted-descending"
-                           icon="icons:arrow-drop-down"></iron-icon>
+                <iron-icon class="sorted-descending" icon="icons:arrow-drop-down"></iron-icon>
 
-                <iron-icon class="sorted-ascending"
-                           icon="icons:arrow-drop-up"></iron-icon>
+                <iron-icon class="sorted-ascending" icon="icons:arrow-drop-up"></iron-icon>
 
                 <span>[[column.title]]</span>
               </div>
@@ -131,17 +117,16 @@
 
           <template is="dom-repeat" items="{{data}}" as="instance">
             <div class="tr horizontal layout" index="[[index]]">
-              <div class="td checkbox">
-                <paper-checkbox on-click="_selectRow" index="[[index]]"></paper-checkbox>
-              </div>
+              <template is="dom-if" if="[[selectRowEnable]]">
+                <div class="td checkbox">
+                  <paper-checkbox on-click="_selectRow" index="[[index]]"></paper-checkbox>
+                </div>
+              </template>
 
               <template is="dom-repeat" items="{{columns}}" as="column">
 
                 <div class="flex td">
-                  <sweet-material-table-item class="flex"
-                                             field="[[column]]"
-                                             data-column$="[[column.key]]"
-                                             row="{{instance}}"></sweet-material-table-item>
+                  <sweet-material-table-item class="flex" field="[[column]]" data-column$="[[column.key]]" row="{{instance}}"></sweet-material-table-item>
                 </div>
               </template>
 
@@ -152,9 +137,7 @@
                     <paper-icon-button icon="icons:more-vert" class="dropdown-trigger"></paper-icon-button>
                     <paper-menu class="dropdown-content">
                       <template is="dom-repeat" items="[[singleActions]]" as="action" index-as="actionIndex">
-                        <paper-item index="[[index]]"
-                                    action="[[action.name]]"
-                                    on-click="_singleActionClicked">
+                        <paper-item index="[[index]]" action="[[action.name]]" on-click="_singleActionClicked">
                           <span>[[action.title]]</span>
                         </paper-item>
                       </template>
@@ -176,11 +159,7 @@
       <div id="tableFooter" class="end-justified" style="text-align: right;">
         <span id="perPageLabel">Rows per page:</span>
         <span id="perPageValue">[[perPage]]</span>
-        <paper-menu-button
-            id="perPageSelector"
-            vertical-align="bottom"
-            horizontal-align="right"
-            open-animation-config="[[_paperMenuButtonOpenAnimationConfig]]">
+        <paper-menu-button id="perPageSelector" vertical-align="bottom" horizontal-align="right" open-animation-config="[[_paperMenuButtonOpenAnimationConfig]]">
           <paper-icon-button icon="icons:arrow-drop-down" class="dropdown-trigger"></paper-icon-button>
           <paper-menu class="dropdown-content">
             <paper-item value="10" on-click="_perPageSelectionChanged">10</paper-item>
@@ -302,6 +281,10 @@
         },
         customTfootContent: {
           type: String,
+          value: false
+        },
+        selectRowEnable: {
+          type: Boolean,
           value: false
         },
 
